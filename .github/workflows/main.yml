@@ -13,8 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: format
-        run: cargo format
+        run: make format
       - name: lint
-        run: cargo lint
+        run: make lint
       - name: test
-        run: cargo test
+        run: make test
