@@ -1,27 +1,32 @@
 { pkgs, ... }:
 
 {
-
   packages = with pkgs; [
-    just
-    cargo-edit
+    rustc
+    cargo
   ];
 
   languages.rust = {
     enable = true;
-
+    channel = "stable";
     components = [
       "rustc"
       "cargo"
       "clippy"
       "rustfmt"
+      "rust-analyzer"
     ];
   };
 
   scripts = {
-    lint.exec = "cd hello_world  && cargo clippy";
-    format.exec = "cd hello_world && cargo fmt --all";
-    test.exec = "cd hello_world  && cargo test";
-    build.exec = "lint && format && test";
+    lint.exec = "cargo clippy -- -D warnings";
+    format.exec = "cargo fmt --all";
+    typecheck.exec = "cargo check";
+    test.exec = "cargo test -- --nocapture";
+  };
+
+  git-hooks.hooks = {
+    rustfmt.enable = true;
+    clippy.enable = true;
   };
 }
