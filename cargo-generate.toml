@@ -1,0 +1,29 @@
+[template]
+cargo_generate_version = ">=0.18.0"
+ignore = [
+  ".git",
+  "target",
+  ".devenv",
+  ".direnv",
+]
+
+[placeholders.description]
+type = "string"
+prompt = "Project description:"
+default = "A modern Rust project with Nix/Devenv integration"
+
+[placeholders.author_name]
+type = "string"
+prompt = "Author name:"
+default = "Developer"
+
+[placeholders.author_email]
+type = "string"
+prompt = "Author email:"
+default = "developer@example.com"
+
+[placeholders.github_user]
+type = "string"
+prompt = "GitHub username or organization:"
+default = "username"
+

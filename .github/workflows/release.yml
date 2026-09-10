@@ -1,0 +1,77 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    name: Build (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            archive_name: rust-template-project-x86_64-unknown-linux-gnu.tar.gz
+            bin_path: target/x86_64-unknown-linux-gnu/release/rust-template-project
+            is_windows: false
+
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            archive_name: rust-template-project-aarch64-apple-darwin.tar.gz
+            bin_path: target/aarch64-apple-darwin/release/rust-template-project
+            is_windows: false
+
+          - os: macos-13
+            target: x86_64-apple-darwin
+            archive_name: rust-template-project-x86_64-apple-darwin.tar.gz
+            bin_path: target/x86_64-apple-darwin/release/rust-template-project
+            is_windows: false
+
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            archive_name: rust-template-project-x86_64-pc-windows-msvc.zip
+            bin_path: target/x86_64-pc-windows-msvc/release/rust-template-project.exe
+            is_windows: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Build release binary
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Package release archive (Unix)
+        if: ${{ !matrix.is_windows }}
+        run: |
+          tar -czf ${{ matrix.archive_name }} -C $(dirname ${{ matrix.bin_path }}) $(basename ${{ matrix.bin_path }})
+          shasum -a 256 ${{ matrix.archive_name }} > ${{ matrix.archive_name }}.sha256
+
+      - name: Package release archive (Windows)
+        if: ${{ matrix.is_windows }}
+        shell: pwsh
+        run: |
+          Compress-Archive -Path ${{ matrix.bin_path }} -DestinationPath ${{ matrix.archive_name }}
+          Get-FileHash -Algorithm SHA256 ${{ matrix.archive_name }} | ForEach-Object { "$($_.Hash)  $($_.Path)" } > "${{ matrix.archive_name }}.sha256"
+
+      - name: Upload artifacts to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ matrix.archive_name }}
+            ${{ matrix.archive_name }}.sha256
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+
