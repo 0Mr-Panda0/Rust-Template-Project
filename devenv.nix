@@ -1,6 +1,8 @@
 { pkgs, ... }:
 
 {
+  process.manager.implementation = "native";
+
   packages = with pkgs; [
     cargo-deny
     cargo-nextest
@@ -37,4 +39,8 @@
     rustfmt.enable = true;
     clippy.enable = true;
   };
+
+  enterTest = ''
+    cargo test
+  '';
 }
