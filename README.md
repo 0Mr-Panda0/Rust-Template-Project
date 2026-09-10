@@ -3,6 +3,8 @@
 This is a modern Rust project template featuring rapid environment provisioning, strict linting, and seamless integration for both Nix and non-Nix users.
 
 [![CI Pipeline](https://github.com/0Mr-Panda0/Rust-Template-Project/actions/workflows/main.yml/badge.svg)](https://github.com/0Mr-Panda0/Rust-Template-Project/actions/workflows/main.yml)
+[![Documentation](https://github.com/0Mr-Panda0/Rust-Template-Project/actions/workflows/docs.yml/badge.svg)](https://0mr-panda0.github.io/Rust-Template-Project/)
+[![License: CC0-1.0](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg)](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ---
 
@@ -150,7 +152,7 @@ Triggered on every push and pull request to `main`:
 - Strict linting via Clippy (`lint` / `cargo clippy -- -D warnings`)
 - Unit and doc tests via Cargo (`unit-test` / `cargo test`)
 - Cross-platform matrix test on Ubuntu, macOS (Apple Silicon), and Windows
-- MSRV verification ensuring compatibility with Rust 1.80
+- MSRV verification ensuring compatibility with Rust 1.85
 - Supply chain security & license audit via `cargo-deny`
 - Code coverage reporting via `cargo-llvm-cov`
 - Devenv integration tests & pre-commit hooks (`devenv test`)
